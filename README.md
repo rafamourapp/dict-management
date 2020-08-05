@@ -1,6 +1,15 @@
-### Dict Management
+# Dict Management
 Responsável por gerenciar as chaves do Pix.
 
+---
 ### Tecnologias utilizadas
+```shell script
+- Java 14
+- Docker
+```
 
-### Run
+---
+### Run / Docker Local
+
+---
+### Monitoração
