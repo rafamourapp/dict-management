@@ -11,6 +11,8 @@ services:
       - POSTGRES_DB=dicit-management
     networks:
       - my-network
+    ports:
+      - 5432:5432
 
   pgadm:
     image: dpage/pgadmin4
