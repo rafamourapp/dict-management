@@ -23,12 +23,14 @@ public class Key implements Serializable {
     @Column(updatable = false, nullable = false)
     private String userId;
 
+    @Enumerated(EnumType.STRING)
     @Column(updatable = false, nullable = false)
     private KeyType keyType;
 
     @Column(nullable = false)
     private String keyValue;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status = Status.CLAIMED;
 
