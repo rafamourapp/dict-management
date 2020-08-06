@@ -36,7 +36,7 @@ public class Key implements Serializable {
     private Status status = Status.CLAIMED;
 
     public KeyDTO toKeyDTO(){
-        KeyDTO.builder()
+        return KeyDTO.builder()
                 .id(this.id)
                 .keyType(this.keyType)
                 .keyValue(this.keyValue)
