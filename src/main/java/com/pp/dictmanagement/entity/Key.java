@@ -1,5 +1,6 @@
 package com.pp.dictmanagement.entity;
 
+import com.pp.dictmanagement.dto.KeyDTO;
 import com.pp.dictmanagement.enums.KeyType;
 import com.pp.dictmanagement.enums.Status;
 import lombok.Data;
@@ -33,5 +34,15 @@ public class Key implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status = Status.CLAIMED;
+
+    public KeyDTO toKeyDTO(){
+        KeyDTO.builder()
+                .id(this.id)
+                .keyType(this.keyType)
+                .keyValue(this.keyValue)
+                .status(this.status)
+                .userId(this.userId)
+                .build();
+    }
 
 }
