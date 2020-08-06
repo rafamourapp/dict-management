@@ -6,17 +6,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface KeyRepository extends JpaRepository<Key, UUID> {
 
-    List<Key> findByUserId(UUID id);
+    List<Key> findAllByUserId(UUID id);
 
     @Query("SELECT k FROM Key k WHERE k.userId = 1? and (k.status like ACTIVE or CLAIMED)")
-    List<Key> findByUser(UUID id);
+    List<Key> findAllActivatedByUser(UUID id);
 
     @Query("SELECT k FROM Key k WHERE k.value = 1? and (k.status like ACTIVE or CLAIMED)")
-    Key findByKeyValue(String keyValue);
+    Optional<Key> findByKeyValue(String keyValue);
 
 }

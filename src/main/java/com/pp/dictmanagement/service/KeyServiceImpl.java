@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -19,14 +20,16 @@ public class KeyServiceImpl implements KeyService {
 
         List<Key> userKeys = listKeysByUser(key.getId());
 
-        if(userKeys.size() >= 5)
-            throw new RuntimeException("Key limit activated");
+        checkIfUserAlreadyHasKeys(userKeys, key);
+        checkKeyLimit(userKeys);
+        validatesTypes(userKeys,key);
+        checkKeyRecorder(key);
 
         return repository.save(key).toKeyDTO();
     }
 
     public List<Key> listKeysByUser(UUID userId){
-        return repository.findByUserId(userId);
+        return repository.findAllActivatedByUser(userId);
     }
 
     private void validatesTypes(List<Key> userKeys, Key key){
@@ -40,17 +43,37 @@ public class KeyServiceImpl implements KeyService {
     }
 
     private void validatesCpf(Key key, List<Key> keys){
-        //verificar se a chave ja exite em outro lugar
+        //verifica se o usuario já tem cpf cadastrado
         //verificar se é um cpf valido
     }
     private void validatesCnpj(Key key, List<Key> keys){
-        //verificar se a chave ja exite em outro lugar
+        //verifica se o usuario já tem cnpj cadastrado
         //verificar se é um cpf valido
     }
     private void validatesEmail(Key key){
-        //verificar se a chave ja exite em outro lugar
+        //envia email?
     }
     private void validatesPhone(Key key){
-        //verificar se a chave ja exite em outro lugar
+        //envia SMS?
+    }
+
+    //verifica se já existem 5 chaves
+    private void checkKeyLimit(List<Key> keys){
+        if(keys.size() >= 5)
+            throw new RuntimeException("Key limit activated");
+    }
+
+    //verifica se o usuario já possui essa chave
+    private void checkIfUserAlreadyHasKeys(List<Key> userKeys,Key key){
+        if(userKeys.stream().anyMatch(k -> k.getKeyValue().equals(key.getKeyValue())))
+            throw new RuntimeException("This key is already active for this user");
+    }
+
+    //verifica se a chave já esta registrada por outro usuario
+    private void checkKeyRecorder(Key key){
+        Optional<Key> existent = repository.findByKeyValue(key.getKeyValue());
+
+        if(existent.isPresent())
+            throw new RuntimeException("Key already registered with another user");
     }
 }
