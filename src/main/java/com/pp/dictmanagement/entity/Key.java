@@ -41,13 +41,13 @@ public class Key implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private Status status = Status.CLAIMED;
+    private Status status = Status.ACTIVE;
 
     public Key(KeyForm form){
         this.keyType = form.getKeyType();
         this.keyValue = form.getKeyValue();
         this.userId = form.getUserId();
-        this.status = Status.CLAIMED;
+        this.status = Status.ACTIVE;
     }
 
     public KeyDTO toKeyDTO(){

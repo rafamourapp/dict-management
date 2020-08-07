@@ -26,6 +26,8 @@ public class KeyService {
         validatesTypes(userKeys,keyForm);
         checkKeyRecorder(keyForm);
 
+        checklinkAtBacen(keyForm);
+
         Key key = new Key(keyForm);
         return repository.save(key).toKeyDTO();
     }
@@ -52,6 +54,10 @@ public class KeyService {
 
         if(existent.isPresent())
             throw new RuntimeException("Key already registered with another user");
+    }
+
+    private void checklinkAtBacen(KeyForm key){
+        //verifica se a chave já possui vinculo no bacen
     }
 
     private void validatesTypes(List<Key> userKeys, KeyForm key){
