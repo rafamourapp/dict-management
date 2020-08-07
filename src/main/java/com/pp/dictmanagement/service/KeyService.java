@@ -4,8 +4,11 @@ import com.pp.dictmanagement.api.form.KeyForm;
 import com.pp.dictmanagement.dto.KeyDTO;
 import com.pp.dictmanagement.entity.Key;
 import com.pp.dictmanagement.repository.KeyRepository;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,13 +42,13 @@ public class KeyService {
     //verifica se já existem 5 chaves
     private void checkKeyLimit(List<Key> keys){
         if(keys.size() >= 5)
-            throw new RuntimeException("Key limit activated");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Key limit activated");
     }
 
     //verifica se o usuario já possui essa chave
     private void checkIfUserAlreadyHasKeys(List<Key> userKeys,KeyForm key){
         if(userKeys.stream().anyMatch(k -> k.getKeyValue().equals(key.getKeyValue())))
-            throw new RuntimeException("This key is already active for this user");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "This key is already active for this user");
     }
 
     //verifica se a chave já esta registrada por outro usuario
@@ -53,7 +56,7 @@ public class KeyService {
         Optional<Key> existent = repository.findByKeyValue(key.getKeyValue());
 
         if(existent.isPresent())
-            throw new RuntimeException("Key already registered with another user");
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Key already registered with another user");
     }
 
     private void checklinkAtBacen(KeyForm key){
@@ -66,7 +69,7 @@ public class KeyService {
             case CNPJ -> validatesCnpj(key, userKeys);
             case EMAIL -> validatesEmail(key);
             case PHONE -> validatesPhone(key);
-            default -> throw new RuntimeException("Invalid key type");
+            default -> throw new ResponseStatusException(HttpStatus.CONFLICT, "Invalid key type");
         }
     }
 
