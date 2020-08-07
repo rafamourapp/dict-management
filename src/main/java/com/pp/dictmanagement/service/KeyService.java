@@ -12,13 +12,13 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class KeyServiceImpl {
+public class KeyService {
 
     private final KeyRepository repository;
 
     public KeyDTO create(Key key){
 
-        List<Key> userKeys = listKeysByUser(key.getId());
+        List<Key> userKeys = listKeysByUser(key.getUserId());
 
         checkIfUserAlreadyHasKeys(userKeys, key);
         checkKeyLimit(userKeys);
@@ -28,7 +28,7 @@ public class KeyServiceImpl {
         return repository.save(key).toKeyDTO();
     }
 
-    public List<Key> listKeysByUser(UUID userId){
+    public List<Key> listKeysByUser(String userId){
         return repository.findAllActivatedByUser(userId);
     }
 
