@@ -1,9 +1,13 @@
 package com.pp.dictmanagement.entity;
 
+import com.pp.dictmanagement.api.form.KeyForm;
 import com.pp.dictmanagement.dto.KeyDTO;
 import com.pp.dictmanagement.enums.KeyType;
 import com.pp.dictmanagement.enums.Status;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,6 +15,9 @@ import java.util.UUID;
 
 @Data
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "TB_KEY")
 public class Key implements Serializable {
 
@@ -33,7 +40,15 @@ public class Key implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     private Status status = Status.CLAIMED;
+
+    public Key(KeyForm form){
+        this.keyType = form.getKeyType();
+        this.keyValue = form.getKeyValue();
+        this.userId = form.getUserId();
+        this.status = Status.CLAIMED;
+    }
 
     public KeyDTO toKeyDTO(){
         return KeyDTO.builder()

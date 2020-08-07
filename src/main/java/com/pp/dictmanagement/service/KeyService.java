@@ -1,5 +1,6 @@
 package com.pp.dictmanagement.service;
 
+import com.pp.dictmanagement.api.form.KeyForm;
 import com.pp.dictmanagement.dto.KeyDTO;
 import com.pp.dictmanagement.entity.Key;
 import com.pp.dictmanagement.repository.KeyRepository;
@@ -16,15 +17,16 @@ public class KeyService {
 
     private final KeyRepository repository;
 
-    public KeyDTO create(Key key){
+    public KeyDTO create(KeyForm keyForm){
 
-        List<Key> userKeys = listKeysByUser(key.getUserId());
+        List<Key> userKeys = listKeysByUser(keyForm.getUserId());
 
-        checkIfUserAlreadyHasKeys(userKeys, key);
+        checkIfUserAlreadyHasKeys(userKeys, keyForm);
         checkKeyLimit(userKeys);
-        validatesTypes(userKeys,key);
-        checkKeyRecorder(key);
+        validatesTypes(userKeys,keyForm);
+        checkKeyRecorder(keyForm);
 
+        Key key = new Key(keyForm);
         return repository.save(key).toKeyDTO();
     }
 
@@ -39,20 +41,20 @@ public class KeyService {
     }
 
     //verifica se o usuario já possui essa chave
-    private void checkIfUserAlreadyHasKeys(List<Key> userKeys,Key key){
+    private void checkIfUserAlreadyHasKeys(List<Key> userKeys,KeyForm key){
         if(userKeys.stream().anyMatch(k -> k.getKeyValue().equals(key.getKeyValue())))
             throw new RuntimeException("This key is already active for this user");
     }
 
     //verifica se a chave já esta registrada por outro usuario
-    private void checkKeyRecorder(Key key){
+    private void checkKeyRecorder(KeyForm key){
         Optional<Key> existent = repository.findByKeyValue(key.getKeyValue());
 
         if(existent.isPresent())
             throw new RuntimeException("Key already registered with another user");
     }
 
-    private void validatesTypes(List<Key> userKeys, Key key){
+    private void validatesTypes(List<Key> userKeys, KeyForm key){
         switch (key.getKeyType()) {
             case CPF -> validatesCpf(key, userKeys);
             case CNPJ -> validatesCnpj(key, userKeys);
@@ -62,18 +64,18 @@ public class KeyService {
         }
     }
 
-    private void validatesCpf(Key key, List<Key> keys){
+    private void validatesCpf(KeyForm key, List<Key> keys){
         //verifica se o usuario já tem cpf cadastrado
         //verificar se é um cpf valido
     }
-    private void validatesCnpj(Key key, List<Key> keys){
+    private void validatesCnpj(KeyForm key, List<Key> keys){
         //verifica se o usuario já tem cnpj cadastrado
         //verificar se é um cpf valido
     }
-    private void validatesEmail(Key key){
+    private void validatesEmail(KeyForm key){
         //envia email?
     }
-    private void validatesPhone(Key key){
+    private void validatesPhone(KeyForm key){
         //envia SMS?
     }
 }

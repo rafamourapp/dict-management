@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-nn
+
 @Repository
 public interface KeyRepository extends JpaRepository<Key, UUID> {
 

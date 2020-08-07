@@ -1,5 +1,6 @@
 package com.pp.dictmanagement.api;
 
+import com.pp.dictmanagement.api.form.KeyForm;
 import com.pp.dictmanagement.dto.KeyDTO;
 import com.pp.dictmanagement.entity.Key;
 import com.pp.dictmanagement.service.KeyService;
@@ -8,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -18,7 +19,7 @@ public class KeyResource implements KeyAPI{
     private final KeyService service;
 
     @PostMapping
-    public KeyDTO create(@RequestBody Key key){
+    public KeyDTO create(@RequestBody KeyForm key){
         return service.create(key);
     }
 
